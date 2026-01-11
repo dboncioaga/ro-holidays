@@ -1,0 +1,50 @@
+fixed:
+  - month: 1
+    day: 1
+    name: Anul Nou
+    type: LEGAL
+  - month: 1
+    day: 2
+    name: Anul Nou (ziua a doua)
+    type: LEGAL
+  - month: 1
+    day: 6
+    name: Boboteaza
+    type: LEGAL
+  - month: 1
+    day: 7
+    name: Soborul Sfântului Ioan Botezătorul
+    type: LEGAL
+  - month: 1
+    day: 24
+    name: Ziua Unirii Principatelor Române
+    type: LEGAL
+    from: 2017
+  - month: 5
+    day: 1
+    name: Ziua Muncii
+    type: LEGAL
+  - month: 6
+    day: 1
+    name: Ziua Copilului
+    type: LEGAL
+  - month: 8
+    day: 15
+    name: Adormirea Maicii Domnului
+    type: LEGAL
+  - month: 11
+    day: 30
+    name: Sfântul Andrei
+    type: LEGAL
+  - month: 12
+    day: 1
+    name: Ziua Națională a României
+    type: LEGAL
+  - month: 12
+    day: 25
+    name: Crăciunul
+    type: LEGAL
+  - month: 12
+    day: 26
+    name: Crăciunul (ziua a doua)
+    type: LEGAL

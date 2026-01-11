@@ -1,0 +1,72 @@
+Romanian Holidays Library
+Copyright 2026 Daniel Boncioaga
+
+This product includes software developed at
+https://github.com/dboncioaga/ro-holidays
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+================================================================================
+
+This product includes the following third-party dependencies:
+
+SnakeYAML (org.yaml:snakeyaml:2.3)
+  * License: Apache License 2.0
+  * Homepage: https://bitbucket.org/snakeyaml/snakeyaml
+  * Copyright (c) 2008, SnakeYAML
+
+JSpecify (org.jspecify:jspecify:1.0.0)
+  * License: Apache License 2.0
+  * Homepage: https://jspecify.dev/
+  * Copyright (c) JSpecify Authors
+
+Spring Framework (org.springframework:spring-context:6.2.1) [Optional]
+  * License: Apache License 2.0
+  * Homepage: https://spring.io/projects/spring-framework
+  * Copyright (c) Spring Framework Authors
+
+Spring Boot (org.springframework.boot:spring-boot-autoconfigure:4.0.1) [Optional]
+  * License: Apache License 2.0
+  * Homepage: https://spring.io/projects/spring-boot
+  * Copyright (c) Spring Boot Authors
+
+JUnit Jupiter (org.junit:junit-bom:6.0.2) [Test Only]
+  * License: Eclipse Public License 2.0
+  * Homepage: https://junit.org/junit5/
+  * Copyright (c) JUnit Team
+
+================================================================================
+
+Holiday Data Sources:
+
+The Romanian holiday calendar data is based on:
+- Romanian Labor Code (Codul Muncii al României)
+- Official Romanian Government announcements
+- Romanian Orthodox Church (Patriarhia Română) for movable holidays
+
+Orthodox Easter Calculation:
+This software uses the Meeus/Jones/Butcher algorithm adapted for the 
+Julian calendar to calculate Orthodox Easter dates. The algorithm is 
+based on published astronomical calculations and validated against 
+official dates from the Romanian Patriarchate.
+
+================================================================================
+
+Attribution:
+
+This library was developed to provide accurate Romanian holiday 
+calculations for Java applications. It is provided "as is" without 
+warranty of any kind, express or implied.
+
+For the most accurate and up-to-date holiday information, please 
+consult official Romanian government sources.

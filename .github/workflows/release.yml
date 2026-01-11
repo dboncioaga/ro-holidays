@@ -1,0 +1,137 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.0.0). If not provided, will remove -SNAPSHOT from current version.'
+        required: false
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Read current version
+        id: current_version
+        run: |
+          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $CURRENT_VERSION"
+
+      - name: Determine release version
+        id: release_version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            RELEASE_VERSION="${{ inputs.version }}"
+          else
+            CURRENT_VERSION="${{ steps.current_version.outputs.current_version }}"
+            RELEASE_VERSION=$(echo "$CURRENT_VERSION" | sed 's/-SNAPSHOT//')
+          fi
+          echo "release_version=$RELEASE_VERSION" >> $GITHUB_OUTPUT
+          echo "Release version: $RELEASE_VERSION"
+
+      - name: Update pom.xml version
+        run: |
+          RELEASE_VERSION="${{ steps.release_version.outputs.release_version }}"
+          # Use Maven Versions plugin to update the project version (no backup files)
+          mvn --batch-mode versions:set -DnewVersion="$RELEASE_VERSION" -DgenerateBackupPoms=false
+
+      - name: Verify pom.xml update
+        run: |
+          NEW_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          EXPECTED_VERSION="${{ steps.release_version.outputs.release_version }}"
+          if [ "$NEW_VERSION" != "$EXPECTED_VERSION" ]; then
+            echo "Error: Version mismatch. Expected: $EXPECTED_VERSION, Got: $NEW_VERSION"
+            exit 1
+          fi
+          echo "Verified pom.xml version: $NEW_VERSION"
+
+      - name: Commit version change
+        run: |
+          git add pom.xml */pom.xml
+          git commit -m "Release version ${{ steps.release_version.outputs.release_version }}" || echo "No changes to commit"
+          git push origin main
+
+      - name: Create and push tag
+        run: |
+          TAG="v${{ steps.release_version.outputs.release_version }}"
+          git tag -a "$TAG" -m "Release ${{ steps.release_version.outputs.release_version }}" || echo "Tag exists"
+          git push origin "$TAG" || echo "Tag push failed or tag exists"
+
+      - name: Create GitHub Release (gh)
+        run: |
+          TAG="v${{ steps.release_version.outputs.release_version }}"
+          TITLE="Release ${{ steps.release_version.outputs.release_version }}"
+          RELEASE="${{ steps.release_version.outputs.release_version }}"
+
+          # create a minimal notes file safely
+          printf "## Release %s\n\nThis release was automatically created from the main branch.\n" "$RELEASE" > release_notes.txt
+
+          # install gh if missing
+          if ! command -v gh >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y gh
+          fi
+
+          # create release using the token supplied in the environment (no gh auth login)
+          gh release create "$TAG" --title "$TITLE" --notes-file release_notes.txt --target main || gh release upload "$TAG" --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure GPG
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+
+      - name: Configure Maven settings
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings>
+            <servers>
+              <server>
+                <id>central</id>
+                <username>${{ secrets.MAVEN_CENTRAL_USERNAME }}</username>
+                <password>${{ secrets.MAVEN_CENTRAL_PASSWORD }}</password>
+              </server>
+            </servers>
+            <profiles>
+              <profile>
+                <id>gpg</id>
+                <properties>
+                  <gpg.executable>gpg</gpg.executable>
+                  <gpg.passphrase>${{ secrets.GPG_PASSPHRASE }}</gpg.passphrase>
+                </properties>
+              </profile>
+            </profiles>
+          </settings>
+          EOF
+
+      - name: Build and publish to Maven Central
+        run: mvn clean deploy -P gpg
+        env:
+          GPG_TTY: $(tty)
