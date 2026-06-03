@@ -1,25 +1,29 @@
 version: 2
 updates:
-  # Maven dependencies
+  # Maven dependencies - single PR for all updates
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Bucharest"
+    open-pull-requests-limit: 1
     groups:
-      spring:
+      all-maven-updates:
         patterns:
-          - "org.springframework*"
-      junit:
-        patterns:
-          - "org.junit*"
-      maven-plugins:
-        patterns:
-          - "org.apache.maven.plugins*"
+          - "*"
 
-  # GitHub Actions
+  # GitHub Actions - single PR for all workflow updates
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Bucharest"
+    open-pull-requests-limit: 1
+    groups:
+      all-actions-updates:
+        patterns:
+          - "*"
