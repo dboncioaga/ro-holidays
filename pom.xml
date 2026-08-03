@@ -63,11 +63,11 @@
         <maven.compiler.release>25</maven.compiler.release>
 
         <!-- Dependency versions -->
-        <junit.version>6.1.0</junit.version>
+        <junit.version>6.1.2</junit.version>
         <snakeyaml.version>2.6</snakeyaml.version>
         <spring-boot.version>4.1.0</spring-boot.version>
         <spring-framework.version>6.2.1</spring-framework.version>
-        <jspecify.version>1.0.0</jspecify.version>
+        <jspecify.version>1.0.1</jspecify.version>
 
         <!-- Plugin versions -->
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
@@ -75,12 +75,12 @@
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
-        <central-publishing-plugin.version>0.10.0</central-publishing-plugin.version>
+        <central-publishing-plugin.version>0.11.0</central-publishing-plugin.version>
         <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
-        <checkstyle.version>13.6.0</checkstyle.version>
+        <checkstyle.version>13.9.0</checkstyle.version>
         <maven-pmd-plugin.version>3.28.0</maven-pmd-plugin.version>
-        <pmd.version>7.25.0</pmd.version>
+        <pmd.version>7.26.0</pmd.version>
     </properties>
 
     <dependencyManagement>
